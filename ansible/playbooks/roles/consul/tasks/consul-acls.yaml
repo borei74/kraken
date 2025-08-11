@@ -1,0 +1,71 @@
+---
+- name: insure that consul policy directory "{{consul_config_dir}}/policies" exists
+  file:
+    path: "{{consul_config_dir}}/policies"
+    state: directory
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+  tags:
+    - consul-policy
+
+- name: template consul policy "{{item['policy_name']}}"
+  template:
+    src: "{{item['policy_template_file']}}"
+    dest: "{{consul_config_dir}}/policies/{{item['policy_template_file']|splitext|first}}"
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+    mode: "0644"
+  tags:
+    - consul-policy
+
+- name: check if consul policy "{{item['policy_name']}}" exists
+  command:
+    cmd: >
+      consul acl policy read
+      -name={{item['policy_name']}}
+      -http-addr=https://consul-kraken.soleks.net:8501
+      -ca-file={{consul_config_dir}}/tls/consul-agent-ca-cert.pem
+      -token={{consul_bootstrap_token}}
+  register: policy_lookup
+  failed_when: false
+
+- name: create consul policy "{{item['policy_name']}}"
+  command:
+    chdir: "{{consul_config_dir}}"
+    cmd: >
+      consul acl policy create
+      -name={{item['policy_name']}}
+      -description="{{item['policy_description']}}"
+      -http-addr=https://consul-kraken.soleks.net:8501
+      -ca-file={{consul_config_dir}}/tls/consul-agent-ca-cert.pem
+      -token={{consul_bootstrap_token}}
+      -rules=@policies/{{item['policy_template_file']|splitext|first}}
+  when: 'policy_lookup.rc != 0'
+  tags:
+    - consul-policy
+
+- name: create consul token for "{{item['policy_name']}}" policy
+  command:
+    cmd: >
+      consul acl token create
+      -description="{{item['policy_description']}}"
+      -policy-name={{item['policy_name']}}
+      -http-addr=https://consul-kraken.soleks.net:8501
+      -ca-file={{consul_config_dir}}/tls/consul-agent-ca-cert.pem
+      -token={{consul_bootstrap_token}}
+      -format=json
+  register: token_create
+  tags:
+    - consul-token
+
+- name: add token to the consul k/v store under "{{item['token_key']}}"
+  command:
+    cmd: >
+      consul kv put
+      -http-addr=https://consul-kraken.soleks.net:8501
+      -ca-file={{consul_config_dir}}/tls/consul-agent-ca-cert.pem
+      -token={{consul_bootstrap_token}}
+      {{item['token_key']}} {{token_create.stdout|from_json|json_query('SecretID')}}
+  tags:
+    - consul-token
+

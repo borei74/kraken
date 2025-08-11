@@ -1,0 +1,39 @@
+---
+consul_datacenter: "us-west-2a"
+
+consul_data_dir: "/opt/consul"
+consul_config_dir: "/etc/consul.d"
+
+consul_server: false
+
+consul_ui_config:
+  enabled: false
+
+consul_client_addr: "0.0.0.0"
+consul_bind_addr: "0.0.0.0"
+consul_advertise_addr: "{{ ansible_host }}"
+
+consul_encrypt: "qcc17FihcrB/YKG+MWR3PZ3Hl1h4QEndGaDqYODbnvY="
+
+consul_ca_file: "consul-agent-ca.pem"
+
+consul_auto_encrypt:
+  tls: true
+
+consul_acls:
+  - policy_name: "{{ansible_hostname}}-nomad-agent-policy"
+    policy_description: "Nomad agent access policy"
+    policy_template_file: nomad-agent-policy.hcl.j2
+    token_key: "kraken/nomad/{{ansible_hostname}}/token"
+  - policy_name: "{{ansible_hostname}}-consul-agent-policy"
+    policy_description: "Consul agent (client) access policy"
+    policy_template_file: consul-agent-policy.hcl.j2
+    token_key: "kraken/consul/{{ansible_hostname}}/token"
+
+consul_acl:
+  enabled: true
+  default_policy: 'deny'
+  enable_token_persistence: true
+  tokens:
+    agent: "{{ lookup('consul_kv', 'kraken/nomad/{{ansible_hostname}}/token', host='consul-kraken.soleks.net', port='8501', token='{{consul_bootstrap_token}}', scheme='https', validate_certs=false) }}"
+    default: "{{ lookup('consul_kv', 'kraken/nomad/{{ansible_hostname}}/token', host='consul-kraken.soleks.net', port='8501', token='{{consul_bootstrap_token}}', scheme='https', validate_certs=false) }}"

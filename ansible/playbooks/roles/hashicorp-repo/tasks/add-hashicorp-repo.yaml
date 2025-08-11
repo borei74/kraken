@@ -1,0 +1,15 @@
+---
+- name: Install gpg utility
+  apt:
+    name: ['gpg']
+    state: present
+
+- name: Get HashiCorp repository key
+  shell:
+    cmd: "curl -fsSL {{hashicorp['repo']['url']}}/{{hashicorp['repo']['key']}} | gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg"
+
+- name: Add HashiCorp apt repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] {{hashicorp['repo']['url']}} {{ansible_lsb['codename']}} main"
+    state: present
+    filename: hashicorp

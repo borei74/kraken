@@ -1,0 +1,22 @@
+---
+consul_datacenter: "us-west-2a"
+
+consul_data_dir: "/opt/consul"
+consul_config_dir: "/etc/consul.d"
+
+consul_server: true
+
+consul_client_addr: "0.0.0.0"
+consul_bind_addr: "0.0.0.0"
+consul_advertise_addr: "{{ ansible_host }}"
+
+consul_bootstrap_expect: 3
+
+consul_encrypt: "qcc17FihcrB/YKG+MWR3PZ3Hl1h4QEndGaDqYODbnvY="
+
+consul_tls_sni: "consul-kraken.soleks.net"
+consul_tls_ca_cert_file: "consul-agent-ca-cert.pem"
+consul_tls_ca_key_file: "consul-agent-ca-key.pem"
+
+consul_auto_encrypt:
+  allow_tls: true

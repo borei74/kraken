@@ -1,0 +1,4 @@
+---
+# tasks file for hashicorp-repo
+#
+- include_tasks: add-hashicorp-repo.yaml

@@ -1,0 +1,9 @@
+plugin "docker" {
+  config {
+    allow_privileged = true
+    gc {
+      image   = true
+      image_delay = "168h"
+    }
+  }
+}

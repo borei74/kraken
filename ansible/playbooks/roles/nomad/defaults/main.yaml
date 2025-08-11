@@ -1,0 +1,216 @@
+# default variables to generate nomad configuration file
+#
+
+# system user to run nomad service
+nomad_user: "nomad"
+
+# system nomad group
+nomad_group: "nomad"
+
+# the name of the local node
+nomad_name: "{{ ansible_hostname }}"
+
+# nomad configuration directory
+nomad_config_dir: "/etc/nomad.d"
+
+# nomad configuration file
+nomad_config_file: "nomad.hcl"
+
+# nomad_data_dir
+# Data directory for the agent to store state. This is required for all agents.
+nomad_data_dir: "/opt/nomad"
+
+# Specifies the region the Nomad agent is a member of.
+nomad_region: "global"
+
+# This flag controls the datacenter in which the agent is running.
+# Nodes in the same datacenter should be on a single LAN.
+nomad_datacenter: "dc1"
+
+# Specifies if the debugging HTTP endpoints should be enabled. These endpoints can be used with profiling tools
+# to dump diagnostic information about Nomad's internals. 
+nomad_enable_debug: false
+
+# Specifies the verbosity of logs the Nomad agent will output.
+# Valid log levels include WARN, INFO, or DEBUG in increasing order of verbosity.
+nomad_log_level: "INFO"
+
+# Specifies the path for logging. If the path does not includes a filename, the filename defaults to nomad.log
+nomad_log_file: "/var/log/nomad.log"
+
+# Specifies the maximum number of older log file archives to keep, not including the log file currently being written.
+nomad_log_rotate_max_files: 20
+
+# Specifies the maximum duration a log should be written to before it needs to be rotated. Must be a duration value such as 30s.
+nomad_log_rotate_duration: "24h"
+
+# Specifies if Nomad should not check for updates and security bulletins.
+nomad_disable_update_check: true
+
+# Specifies if the agent should gracefully leave when receiving the terminate signal.
+# By default, the agent will exit forcefully on any signal. This value should only be set to true on server agents
+# if it is expected that a terminated server instance will never join the cluster again.
+nomad_leave_on_terminate: false
+
+# Specifies if the agent should gracefully leave when receiving the interrupt signal.
+# By default, the agent will exit forcefully on any signal. This value should only be set to true on server agents
+# if it is expected that a terminated server instance will never join the cluster again.
+nomad_leave_on_interrupt: false
+
+# Specifies which address the Nomad agent should bind to for network services,
+# including the HTTP interface as well as the internal gossip protocol and RPC mechanism.
+nomad_bind_addr: "127.0.0.1"
+
+# Specifies the bind address for individual network services.
+# Any values configured in this stanza take precedence over the default bind_addr.
+nomad_addresses_http: "127.0.0.1"
+nomad_addresses_rpc: "127.0.0.1"
+nomad_addresses_serf: "127.0.0.1"
+
+# Specifies the network ports used for different services required by the Nomad agent.
+nomad_ports_http: 4646
+nomad_ports_rpc: 4647
+nomad_ports_serf: 4648
+
+# Specifies the advertise address for individual network services. This can be used to advertise a
+# different address to the peers of a server or a client node to support more complex network configurations such as NAT.
+# This configuration is optional, and defaults to the bind address of the specific network service if it is not provided. 
+nomad_advertise_http: "127.0.0.1:4646"
+nomad_advertise_rpc: "127.0.0.1:4647"
+nomad_advertise_serf: "127.0.0.1:4648"
+
+# Specifies if this agent should run in server mode. All other server options depend on this value being set.
+nomad_server_enabled: false
+
+# This flag provides the number of expected servers in the datacenter.
+nomad_server_bootstrap_expect: 1
+
+# Specifies the secret key to use for encryption of Nomad server's gossip network traffic.
+nomad_server_encrypt: ""
+
+# Specifies a list of server addresses to join. This is similar to start_join, but will continue
+# to be attempted even if the initial join attempt fails, up to retry_max.
+# Further, retry_join is available to both Nomad servers and clients, while start_join is only defined for Nomad servers.
+# This is useful for cases where we know the address will become available eventually.
+# Use retry_join with an array as a replacement for start_join, do not use both options. 
+nomad_server_server_join_retry_join: []
+
+# Specifies the maximum number of join attempts to be made before exiting with a return code of 1.
+# By default, this is set to 0 which is interpreted as infinite retries.
+nomad_server_server_join_retry_max: 0
+
+# Specifies the time to wait between retry join attempts.
+nomad_server_server_join_retry_interval: "30s"
+
+# Specifies if client mode is enabled. All other client configuration options depend on this value.
+nomad_client_enabled: false
+
+# Specifies an arbitrary string used to logically group client nodes by user-defined class.
+# This can be used during job placement as a filter.
+nomad_client_node_class: ""
+
+# Specifies a list of server addresses to join. This is similar to start_join, but will continue
+# to be attempted even if the initial join attempt fails, up to retry_max.
+# Further, retry_join is available to both Nomad servers and clients, while start_join is only defined for Nomad servers.
+# This is useful for cases where we know the address will become available eventually.
+# Use retry_join with an array as a replacement for start_join, do not use both options.
+nomad_client_server_join_retry_join: []
+
+# Specifies the maximum number of join attempts to be made before exiting with a return code of 1.
+# By default, this is set to 0 which is interpreted as infinite retries.
+nomad_client_server_join_retry_max: 0
+
+# Specifies the time to wait between retry join attempts.
+nomad_client_server_join_retry_interval: "30s"
+
+# 
+nomad_consul_address: ""
+
+#
+nomad_consul_token: ""
+
+#
+nomad_consul_ca_file: ""
+
+#
+nomad_consul_cert_file: ""
+
+#
+nomad_consul_key_file: ""
+
+#
+nomad_consul_server_service_name: "nomad-server"
+
+#
+nomad_consul_client_service_name: "nomad-client"
+
+#
+nomad_consul_auto_advertise: true
+
+#
+nomad_consul_server_auto_join: true
+
+#
+nomad_consul_client_auto_join: true
+
+#
+nomad_consul_ssl: false
+
+#
+nomad_consul_verify_ssl: true
+
+#
+nomad_vault_enabled: false
+
+#
+nomad_vault_address: ""
+
+#
+nomad_vault_token: ""
+
+#
+nomad_vault_allow_unauthenticated: false
+
+#
+nomad_vault_create_from_role: ""
+
+#
+nomad_vault_task_token_ttl: ""
+
+#
+nomad_vault_ca_file: ""
+
+#
+nomad_vault_ca_path: ""
+
+#
+nomad_vault_cert_file: ""
+
+#
+nomad_vault_key_file: ""
+
+#
+nomad_vault_tls_server_name: ""
+
+#
+nomad_vault_tls_skip_verify: false
+
+#
+nomad_acl_enabled: true
+
+#
+nomad_acl_token_ttl: ""
+
+#
+nomad_acl_policy_ttl: ""
+
+#
+nomad_acl_replication_token: ""
+
+#
+nomad_cni_plugins_directory: "/opt/cni/bin"
+nomad_cni_plugins_download_url: "https://github.com/containernetworking/plugins/releases/download/"
+nomad_cni_plugins_version: "v1.1.1"
+nomad_cni_plugins_os: "linux"
+nomad_cni_plugins_arch: "amd64"
+nomad_cni_plugins_package: "cni-plugins-{{nomad_cni_plugins_os}}-{{nomad_cni_plugins_arch}}"

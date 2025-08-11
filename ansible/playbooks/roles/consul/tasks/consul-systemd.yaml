@@ -1,0 +1,9 @@
+---
+
+- name: enable consul service and insure that it is up and running
+  systemd:
+    name: consul
+    enabled: yes
+    state: started
+  tags:
+    - consul-systemd

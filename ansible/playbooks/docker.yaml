@@ -1,0 +1,7 @@
+---
+- name: Docker containers engine
+  hosts: nomad_clients
+  become: true
+  roles:
+    - role: docker
+

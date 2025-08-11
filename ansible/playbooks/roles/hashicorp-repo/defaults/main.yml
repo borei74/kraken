@@ -1,0 +1,7 @@
+---
+# defaults file for hashicorp-repo
+#
+hashicorp:
+  repo:
+    url: "https://apt.releases.hashicorp.com"
+    key: "gpg"

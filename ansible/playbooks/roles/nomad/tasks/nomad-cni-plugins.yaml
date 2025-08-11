@@ -1,0 +1,18 @@
+---
+
+- name: ensure CNI plugins directory exists
+  file:
+    path: "{{nomad_cni_plugins_directory}}"
+    owner: "root"
+    group: "root"
+    mode: 0755
+    state: "directory"
+
+- name: download CNI plugins
+  get_url:
+    url: "{{nomad_cni_plugins_download_url}}/{{nomad_cni_plugins_version}}/{{nomad_cni_plugins_package}}-{{nomad_cni_plugins_version}}.tgz"
+    dest: "{{nomad_cni_plugins_directory}}/cni_plugins.tgz"
+
+- name: unpack CNI plugins
+  command:
+    cmd: "tar -C {{nomad_cni_plugins_directory}} -xzf {{nomad_cni_plugins_directory}}/cni_plugins.tgz"

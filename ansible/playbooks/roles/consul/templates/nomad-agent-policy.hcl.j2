@@ -1,0 +1,18 @@
+node "{{ ansible_hostname }}" {
+  policy = "write"
+}
+
+agent_prefix "" {
+  policy = "read"
+}
+
+service_prefix "" {
+  policy = "write"
+}
+
+service_prefix "" { policy = "read" }
+node_prefix    "" { policy = "read" }
+
+{%- if nomad_server_enabled is defined and nomad_server_enabled|lower == true %}
+acl = "write"
+{%- endif %}

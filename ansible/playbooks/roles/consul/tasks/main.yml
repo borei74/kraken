@@ -1,0 +1,25 @@
+---
+# tasks file for consul
+#
+- include_tasks: consul-install.yaml
+  tags:
+    - consul-install
+
+- include_tasks: consul-tls.yaml
+  tags:
+    - consul-tls
+
+- include_tasks: consul-acls.yaml
+  with_items: "{{ consul_acls }}"
+  when: inventory_hostname in groups['consul_clients']
+  tags:
+    - consul-acls
+
+- include_tasks: consul-config.yaml
+  tags:
+    - consul-config
+
+- include_tasks: consul-systemd.yaml
+  tags:
+    - consul-systemd
+

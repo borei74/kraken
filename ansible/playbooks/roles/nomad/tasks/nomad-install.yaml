@@ -1,0 +1,6 @@
+---
+- name: install nomad orchistration system
+  apt:
+    name: nomad
+    update_cache: yes
+    state: present

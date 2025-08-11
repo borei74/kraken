@@ -1,0 +1,8 @@
+---
+# tasks file for nomad
+#
+- include_tasks: nomad-install.yaml
+- include_tasks: nomad-config.yaml
+- include_tasks: nomad-plugins.yaml
+- include_tasks: nomad-systemd.yaml
+- include_tasks: nomad-cni-plugins.yaml

@@ -1,0 +1,26 @@
+plugin: aws_ec2
+regions:
+  - us-west-2
+
+# Use access/secret keys, not secure
+# aws_access_key: 
+# aws_secret_key: 
+# or provide profile name
+aws_profile: 'default'
+
+# keyed_groups:
+#   - key: tags.Role
+
+hostnames:
+  - private-ip-address
+
+groups:
+  consul_clients: ( tags['Role'] is defined and tags['Role'] in ["nomad-server", "nomad-client", "nomad-edge"])
+  consul_servers: ( tags['Role'] is defined and tags['Role'] in ["consul-server"])
+  nomad_servers: (tags['Role'] is defined and tags['Role'] in ["nomad-server"])
+  nomad_clients: (tags['Role'] is defined and tags['Role'] in ["nomad-client", "nomad-edge"])
+  nomad_edge: (tags['Role'] is defined and tags['Role'] in ["nomad-edge"])
+
+filtres:
+  instance-state-name : running
+  vpc-id: "vpc-061554b5ac70fa467"

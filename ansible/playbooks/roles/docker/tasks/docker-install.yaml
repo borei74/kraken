@@ -1,0 +1,7 @@
+---
+- name: install docker containers engine
+  apt:
+    name: ['docker-ce', 'docker-ce-cli', 'containerd.io', 'docker-compose-plugin']
+    update_cache: yes
+    state: present
+

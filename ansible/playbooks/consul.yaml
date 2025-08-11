@@ -1,0 +1,8 @@
+---
+- name: HashiCorp Consul service mesh
+  hosts: consul_servers:consul_clients
+  become: true
+  roles:
+    - role: hashicorp-repo
+    - role: consul
+

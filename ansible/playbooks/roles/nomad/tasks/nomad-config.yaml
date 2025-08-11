@@ -1,0 +1,27 @@
+---
+
+- name: template nomad main confuguration file
+  vars:
+    nomad_consul_token: "{{ lookup('consul_kv', 'kraken/nomad/{{ansible_hostname}}/token', host='consul-kraken.soleks.net', port='8501', token='{{consul_bootstrap_token}}', scheme='https', validate_certs=false) }}"
+  template:
+    src: nomad.hcl.j2
+    dest: "{{nomad_config_dir}}/{{nomad_config_file}}"
+    owner: "{{nomad_user}}"
+    group: "{{nomad_group}}"
+    mode: "0644"
+  notify:
+    - restart nomad service
+  tags:
+    - nomad-config
+
+- name: template nomad environment file
+  template:
+    src: nomad.env.j2
+    dest: "{{nomad_config_dir}}/nomad.env"
+    owner: "{{nomad_user}}"
+    group: "{{nomad_group}}"
+    mode: "0644"
+  notify:
+    - restart nomad service
+  tags:
+    - nomad-config

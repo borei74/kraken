@@ -1,0 +1,7 @@
+---
+# handlers file for nomad
+#
+- name: restart nomad service
+  systemd:
+    name: nomad
+    state: restarted

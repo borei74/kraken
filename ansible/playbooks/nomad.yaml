@@ -1,0 +1,8 @@
+---
+- name: HashiCorp Nomad orchistration
+  hosts: nomad_clients:nomad_servers
+  become: true
+  roles:
+    - role: hashicorp-repo
+    - role: nomad
+

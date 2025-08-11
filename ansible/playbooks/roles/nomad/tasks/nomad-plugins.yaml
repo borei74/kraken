@@ -1,0 +1,13 @@
+---
+
+- name: template nomad docker plugin confuguration file
+  template:
+    src: docker.hcl.j2
+    dest: "{{nomad_config_dir}}/docker.hcl"
+    owner: "{{nomad_user}}"
+    group: "{{nomad_group}}"
+    mode: "0644"
+  notify:
+    - restart nomad service
+  tags:
+    - nomad-config

@@ -1,0 +1,7 @@
+---
+# defaults file for docker
+#
+docker:
+  repo:
+    url: "https://download.docker.com/linux/debian"
+    key: "gpg"

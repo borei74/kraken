@@ -1,0 +1,16 @@
+---
+- name: install support packages
+  apt:
+    name: ['python3-consul']
+    state: present
+  tags:
+    - consul-install
+
+- name: install consul service mesh
+  apt:
+    name: consul=1.14.4-1
+    allow_downgrade: true
+    update_cache: yes
+    state: present
+  tags:
+    - consul-install

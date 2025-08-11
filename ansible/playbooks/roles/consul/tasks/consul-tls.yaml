@@ -1,0 +1,60 @@
+---
+- name: insure that consul tls directory exists
+  file:
+    path: "{{consul_config_dir}}/tls"
+    state: directory
+    mode: 0755
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+    
+- name: deploy consul CA cert
+  copy:
+    src: "{{consul_tls_ca_cert_file}}"
+    dest: "{{consul_config_dir}}/tls/{{consul_tls_ca_cert_file}}"
+    mode: 0644
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+
+- name: deploy consul CA key
+  copy:
+    src: "{{consul_tls_ca_key_file}}"
+    dest: "{{consul_config_dir}}/tls/{{consul_tls_ca_key_file}}"
+    mode: 0600
+    owner: "{{ consul_user }}"
+    group: "{{ consul_group }}"
+  when: consul_server == true
+
+- name: create consul server certificate and private key
+  block:
+
+    - name: create temporary consul server ceritificate and private key
+      command:
+        chdir: "{{consul_tmp_dir}}"
+        cmd: >
+          consul tls cert create -server
+          -ca={{consul_config_dir}}/tls/{{consul_tls_ca_cert_file}} -key={{consul_config_dir}}/tls/{{consul_tls_ca_key_file}}
+          -days={{consul_tls_days}}
+          -dc={{consul_datacenter}}
+          -additional-dnsname={{ansible_hostname}}
+          -additional-dnsname={{consul_tls_sni}}
+
+    - name: update current consul sertificate and private key
+      command: cp -f {{consul_tmp_dir}}/{{consul_tls_cert_file}} {{consul_tmp_dir}}/{{consul_tls_key_file}} {{consul_config_dir}}/tls
+
+    - name: fix certificate and key files owner
+      file: path={{ item }} owner={{consul_user}} group={{consul_group}}
+      with_items:
+        - "{{consul_config_dir}}/tls/{{consul_tls_cert_file}}"
+        - "{{consul_config_dir}}/tls/{{consul_tls_key_file}}"
+
+    - name: cleanup temporary server certificate and key files
+      file: path={{item}} state=absent
+      with_items:
+        - "{{consul_tmp_dir}}/{{consul_tls_cert_file}}"
+        - "{{consul_tmp_dir}}/{{consul_tls_key_file}}"
+
+  when: consul_server == true
+  notify:
+    - restart consul service  
+  tags:
+    - consul-tls

@@ -1,0 +1,13 @@
+---
+
+- name: template consul main confuguration file
+  template:
+    src: consul.hcl.j2
+    dest: "{{consul_config_dir}}/{{consul_config_file}}"
+    owner: "{{consul_user}}"
+    group: "{{consul_group}}"
+    mode: "0644"
+  notify:
+    - restart consul service
+  tags:
+    - consul-config

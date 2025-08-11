@@ -1,0 +1,6 @@
+---
+# tasks file for docker
+#
+- include_tasks: docker-add-repo.yaml
+- include_tasks: docker-install.yaml
+- include_tasks: docker-systemd.yaml

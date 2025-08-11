@@ -1,0 +1,27 @@
+---
+nomad_config_dir: "/etc/nomad.d"
+
+nomad_region: "us-west-2"
+nomad_datacenter: "us-west-2a"
+
+nomad_bind_addr: "0.0.0.0"
+
+nomad_addresses_http: "{{ ansible_host }}"
+nomad_addresses_rpc: "{{ ansible_host }}"
+nomad_addresses_serf: "{{ ansible_host }}"
+
+nomad_advertise_http: "{{ ansible_host }}:4646"
+nomad_advertise_rpc: "{{ ansible_host }}:4647"
+nomad_advertise_serf: "{{ ansible_host }}:4648"
+
+nomad_server_enabled: false
+
+nomad_client_enabled: true
+nomad_client_node_class: "generic"
+nomad_client_server_join_retry_join: "{{ groups['nomad_servers'] | map('extract', hostvars, ['inventory_hostname']) | to_json }}"
+
+nomad_consul_address: "127.0.0.1:8500"
+nomad_consul_ca_file: "/etc/consul.d/consul-agent-ca-cert.pem"
+nomad_consul_ssl: false
+nomad_consul_verify_ssl: false
+
